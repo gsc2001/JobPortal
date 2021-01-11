@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { text } = require('./general');
+const { applicationStatus } = require('../utils/enums');
 
 const ApplicationSchema = new mongoose.Schema(
     {
@@ -15,7 +16,7 @@ const ApplicationSchema = new mongoose.Schema(
         sop: text,
         status: {
             type: String,
-            enum: ['STB', 'SHL', 'ACC', 'REJ'],
+            enum: [...Object.values(applicationStatus)],
             default: 'STB'
         }
     },

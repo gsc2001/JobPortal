@@ -1,4 +1,17 @@
-const validateModel = Model => (req, res, next) => {
+const { Recruiter, Applicant } = require('../models/User');
+const { roles } = require('../utils/enums');
+
+const validateUserModel = (req, res, next) => {
+    if (!req.body.role) {
+        return res.status(400).json({ errors: [{ msg: 'Bad request' }] });
+    }
+    let Model;
+    if (req.body.role === roles.recruiter) {
+        Model = Recruiter;
+    } else {
+        Model = Applicant;
+    }
+
     const _obj = new Model({
         ...req.body
     });
@@ -13,4 +26,4 @@ const validateModel = Model => (req, res, next) => {
     next();
 };
 
-module.exports = { validateModel };
+module.exports = { validateUserModel };

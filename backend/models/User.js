@@ -17,7 +17,6 @@ const UserSchema = new mongoose.Schema(
             }
         },
         password: text,
-        rating: number,
         role: {
             type: String,
             enum: ['applicant', 'recruiter'],
@@ -63,6 +62,11 @@ const ApplicantSchema = new mongoose.Schema({
     skills: {
         type: [String],
         default: []
+    },
+    ratingMap: {
+        type: Map,
+        of: Number,
+        default: {}
     }
     // NOTE: May not need to store these here
     // applications: [

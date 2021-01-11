@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { roles } = require('../utils/enums');
 
 const verify = req => {
     const token = req.header('Authorization');

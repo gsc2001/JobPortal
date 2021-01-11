@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
-const { model } = require('mongoose');
-
-const User = require('../models/User');
+const { User } = require('../models/User');
+const { roles } = require('../utils/enums');
 const { verify } = require('./utils');
 
 const auth = async (req, res, next) => {
@@ -28,6 +26,23 @@ const auth = async (req, res, next) => {
     }
 };
 
+const isRecruiter = async (req, res, next) => {
+    console.log(req.user, roles.recruiter);
+    if (req.user.role !== roles.recruiter) {
+        return res.status(401).json({ errors: [{ msg: 'Only recruiters allowed' }] });
+    }
+    next();
+};
+
+const isApplicant = async (req, res, next) => {
+    if (req.user.role !== roles.applicant) {
+        return res.status(401).json({ errors: [{ msg: 'Only applicants allowed' }] });
+    }
+    next();
+};
+
 module.exports = {
-    auth
+    auth,
+    isRecruiter,
+    isApplicant
 };

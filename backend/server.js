@@ -13,6 +13,7 @@ app.use(express.json());
 
 // Connect routers
 app.use('/api/core', require('./routes/api/core'));
+app.use('/api/user', require('./routes/api/user'));
 
 const PORT = process.env.PORT || 5000;
 

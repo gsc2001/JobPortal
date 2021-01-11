@@ -2,9 +2,10 @@ const express = require('express');
 const { check } = require('express-validator');
 const bcrypt = require('bcryptjs');
 
-const { validateModel } = require('../../middleware/validators');
+const { validateUserModel } = require('../../middleware/validators');
 const { Applicant, Recruiter, User } = require('../../models/User');
 const { validate } = require('../../utils');
+const { roles } = require('../../utils/enums');
 
 const router = express.Router();
 
@@ -48,43 +49,47 @@ const registerUser = async user => {
 };
 
 /**
- * @route		POST api/core/register/applicant
+ * @route		POST api/core/register
  * @description Register user
  * @access		public
  */
-router.post('/register/applicant', validateModel(Applicant), async (req, res) => {
+router.post('/register', validateUserModel, async (req, res) => {
     try {
         let _u = await User.findOne({ email: req.body.email });
         if (_u) {
             return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
         }
-        const applicant = new Applicant({ ...req.body });
-        const token = await registerUser(applicant);
-        return res.json({ token });
+        let user;
+        if (req.body.role === roles.recruiter) {
+            user = new Recruiter({ ...req.body });
+        } else {
+            user = new Applicant({ ...req.body });
+        }
+        const token = await registerUser(user);
+        return res.json({ token, role: roles.applicant });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
     }
 });
 
-/**
- * @route		POST api/core/register/recruiter
- * @description Register recruiter
- * @access		public
- */
-router.post('/register/recruiter', validateModel(Recruiter), async (req, res) => {
-    try {
-        let _u = await User.findOne({ email: req.body.email });
-        if (_u) {
-            return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
-        }
-        const recruiter = new Recruiter({ ...req.body });
-        const token = await registerUser(recruiter);
-        return res.json({ token });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
-    }
-});
-
+// /**
+//  * @route		POST api/core/register/recruiter
+//  * @description Register recruiter
+//  * @access		public
+//  */
+// router.post('/register/recruiter', validateModel(Recruiter), async (req, res) => {
+//     try {
+//         let _u = await User.findOne({ email: req.body.email });
+//         if (_u) {
+//             return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+//         }
+//         const recruiter = new Recruiter({ ...req.body });
+//         const token = await registerUser(recruiter);
+//         return res.json({ token, role: roles.recruiter });
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+//     }
+// });
 module.exports = router;
