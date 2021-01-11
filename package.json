@@ -1,8 +1,12 @@
 {
-    "name": "mern-ts",
+    "name": "job-portal",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gsc2001/JobPortal.git"
+    },
     "scripts": {
         "server": "npm run server --prefix backend",
         "client": "npm start --prefix frontend",

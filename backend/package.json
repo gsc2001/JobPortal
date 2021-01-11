@@ -1,7 +1,7 @@
 {
-    "name": "backend",
+    "name": "job-portal-backend",
     "version": "1.0.0",
-    "description": "Backend for a MERN stack app",
+    "description": "Backend for a Job Portal app",
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
