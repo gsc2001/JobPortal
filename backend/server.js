@@ -12,9 +12,7 @@ app.use(express.json());
 // apply google strategy
 
 // Connect routers
-app.get('/', (req, res) => {
-    res.send('Server setup successfully');
-});
+app.use('/api/core', require('./routes/api/core'));
 
 const PORT = process.env.PORT || 5000;
 

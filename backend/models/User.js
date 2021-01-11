@@ -1,10 +1,21 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const { text, number } = require('./general');
+const validators = require('../utils/validators');
 
 const UserSchema = new mongoose.Schema(
     {
         name: text,
-        email: text,
+        email: {
+            type: String,
+            unique: true,
+            required: true,
+            validate: {
+                validator: validators.emailValidator,
+                message: props => `${props.value} is not a valid email`
+            }
+        },
         password: text,
         rating: number,
         role: {
@@ -16,7 +27,20 @@ const UserSchema = new mongoose.Schema(
     { discriminatorKey: 'role' }
 );
 
-// TODO: pre/post hooks and methods for user
+UserSchema.methods.generateJWT = function () {
+    const payload = {
+        user: {
+            id: this._id,
+            role: this.role
+        }
+    };
+    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: 36000000 });
+    return token;
+};
+
+UserSchema.methods.checkPassword = function (password) {
+    return bcrypt.compare(password, this.password);
+};
 
 const User = mongoose.model('user', UserSchema);
 
@@ -53,10 +77,14 @@ const Applicant = User.discriminator('applicant', ApplicantSchema);
 
 const RecruiterSchema = new mongoose.Schema({
     contactNumber: {
-        type: Number,
-        required: true
+        type: String,
+        required: true,
+        validate: {
+            validator: validators.phoneValidator,
+            message: props => `${props.value} is not a valid phone`
+        }
     },
-    Bio: text
+    bio: text
     // NOTE: May not need to store these here
     // jobs: [
     //     {
