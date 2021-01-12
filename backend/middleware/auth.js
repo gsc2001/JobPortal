@@ -27,7 +27,6 @@ const auth = async (req, res, next) => {
 };
 
 const isRecruiter = async (req, res, next) => {
-    console.log(req.user, roles.recruiter);
     if (req.user.role !== roles.recruiter) {
         return res.status(401).json({ errors: [{ msg: 'Only recruiters allowed' }] });
     }

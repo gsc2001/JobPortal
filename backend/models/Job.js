@@ -48,6 +48,6 @@ const JobSchema = new mongoose.Schema(
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-const Job = mongoose.model('jobListing', JobSchema);
+const Job = mongoose.model('job', JobSchema);
 
 module.exports = Job;
