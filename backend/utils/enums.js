@@ -8,5 +8,10 @@ module.exports = {
         Rejected: 'REJ',
         Standby: 'STB',
         Shortlisted: 'SHL'
+    },
+    jobTypes: {
+        partTime: "PT",
+        fullTime: "FT",
+        workFromHome: "WFH"
     }
 };

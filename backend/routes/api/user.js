@@ -93,12 +93,9 @@ router.patch(
                 applicant: applicantId,
                 status: applicationStatus.Accepted
             })
-                .populate('jobListing', 'recruiter')
+                .populate('job', 'recruiter')
                 .lean();
-            if (
-                !application ||
-                String(application.jobListing.recruiter) !== req.user.id
-            ) {
+            if (!application || String(application.job.recruiter) !== req.user.id) {
                 return res.status(401).json({ errors: [{ msg: 'Not allowed!' }] });
             }
 

@@ -9,6 +9,11 @@ const validate = (req, res) => {
     return 1;
 };
 
+const sendError = (res, code, msg) => {
+    return res.status(code).json({ errors: [{ msg }] });
+};
+
 module.exports = {
-    validate
+    validate,
+    sendError
 };

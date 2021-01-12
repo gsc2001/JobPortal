@@ -4,9 +4,9 @@ const { applicationStatus } = require('../utils/enums');
 
 const ApplicationSchema = new mongoose.Schema(
     {
-        jobListing: {
+        job: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'jobListing'
+            ref: 'job'
         },
         applicant: {
             type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const ApplicationSchema = new mongoose.Schema(
         status: {
             type: String,
             enum: [...Object.values(applicationStatus)],
-            default: 'STB'
+            default: applicationStatus.Standby
         }
     },
     { timestamps: { createdAt: true, updatedAt: false } }

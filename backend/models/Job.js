@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const { jobTypes } = require('../utils/enums');
 const { number, text } = require('./general');
 
-const JobListingSchema = new mongoose.Schema(
+const JobSchema = new mongoose.Schema(
     {
         recruiter: {
             type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +27,7 @@ const JobListingSchema = new mongoose.Schema(
         },
         jobType: {
             type: String,
-            enum: ['FT', 'PT', 'WFH'],
+            enum: [...Object.values(jobTypes)],
             required: true
         },
         duration: {
@@ -38,11 +39,15 @@ const JobListingSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        rating: number
+        ratingMap: {
+            type: Map,
+            of: Number,
+            default: {}
+        }
     },
     { timestamps: { createdAt: true, updatedAt: false } }
 );
 
-const JobListing = mongoose.model('jobListing', JobListingSchema);
+const Job = mongoose.model('jobListing', JobSchema);
 
-module.exports = JobListing;
+module.exports = Job;
