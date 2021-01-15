@@ -7,6 +7,7 @@ const Application = require('../../models/Application');
 const { roles } = require('../../utils/enums');
 const { validateUserModel } = require('../../middleware/validators');
 const { applicationStatus } = require('../../utils/enums');
+const uploadImage = require('../../utils/uploadImage');
 
 const router = express.Router();
 
@@ -112,5 +113,20 @@ router.patch(
         }
     }
 );
+
+/**
+ * @route		POST /api/user/upload
+ * @description Upload image
+ * @access		private
+ */
+router.post('/upload_image', auth, async (req, res) => {
+    try {
+        const image_res = await uploadImage(req.body.file);
+        return res.json(image_res.data.image);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
 
 module.exports = router;

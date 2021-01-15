@@ -7,6 +7,7 @@ const validators = require('../utils/validators');
 const UserSchema = new mongoose.Schema(
     {
         name: text,
+        avatarImage: text,
         email: {
             type: String,
             unique: true,
