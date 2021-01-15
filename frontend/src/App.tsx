@@ -1,3 +1,4 @@
+import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
 import { Provider as StoreProvider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -9,6 +10,7 @@ function App() {
     return (
         <StoreProvider store={store}>
             <Router>
+                <CssBaseline />
                 <Routes />
             </Router>
         </StoreProvider>
