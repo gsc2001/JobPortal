@@ -47,11 +47,13 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
 const Login: React.FC<LoginProps> = ({}) => {
     const classes = useStyles();
     const initialValues: LoginFormValues = { email: '', password: '', rememberMe: false };
+
+    
+
+
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
@@ -64,7 +66,6 @@ const Login: React.FC<LoginProps> = ({}) => {
                 <Formik
                     initialValues={initialValues}
                     onSubmit={async a => {
-                        await sleep(1000);
                         console.log(a);
                     }}
                 >

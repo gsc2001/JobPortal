@@ -41,3 +41,9 @@ const authSlice = createSlice({
         }
     }
 });
+
+const { authReset, authSuccess } = authSlice.actions;
+
+export default authSlice.reducer;
+
+export { authReset, authSuccess };
