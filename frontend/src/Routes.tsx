@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
 import Login from './views/Auth/Login';
@@ -10,8 +10,10 @@ import Profile from './views/Profile';
 const MainRoutes: React.FC = ({}) => {
     return (
         <MainLayout>
-            <Route exact path="/" component={() => <Redirect to="/login" />} />
-            <Route exact path="/login" component={Login} />
+            <Switch>
+                <Route exact path="/" component={() => <Redirect to="/login" />} />
+                <Route exact path="/login" component={() => <Login />} />
+            </Switch>
         </MainLayout>
     );
 };

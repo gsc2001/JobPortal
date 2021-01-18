@@ -11,7 +11,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <>
             <TopBar />
             <Toolbar />
-            <Switch>{children}</Switch>
+            {children}
             <Alerts />
         </>
     );

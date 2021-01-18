@@ -51,9 +51,6 @@ const Login: React.FC<LoginProps> = ({}) => {
     const classes = useStyles();
     const initialValues: LoginFormValues = { email: '', password: '', rememberMe: false };
 
-    
-
-
     return (
         <Container component="main" maxWidth="xs">
             <div className={classes.paper}>
