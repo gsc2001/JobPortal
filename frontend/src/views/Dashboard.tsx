@@ -1,12 +1,15 @@
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { authReset } from '../store/auth';
 import readFile from '../utils/readFile';
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
     const [file, setFile] = useState<File | undefined>();
+    const dispatch = useDispatch();
 
     const upload = async () => {
         if (!file) return;
@@ -33,6 +36,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             <Button onClick={upload} disabled={!file}>
                 Upload!
             </Button>
+            <Button onClick={() => dispatch(authReset())}>Logout</Button>
         </div>
     );
 };

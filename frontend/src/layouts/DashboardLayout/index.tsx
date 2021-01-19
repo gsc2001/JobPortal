@@ -26,9 +26,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <Toolbar />
             <div className={classes.root}>
                 <SideDrawer />
-                <main className={classes.content}>
-                    <Switch>{children}</Switch>
-                </main>
+                <main className={classes.content}>{children}</main>
             </div>
         </>
     );

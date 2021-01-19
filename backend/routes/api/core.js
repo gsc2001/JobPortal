@@ -32,7 +32,15 @@ router.post(
                 return res.status(401).json({ errors: [{ msg: 'Invalid credentials' }] });
             }
 
-            return res.json({ token: user.generateJWT(), role: user.role });
+            return res.json({
+                token: user.generateJWT(),
+                user: {
+                    role: user.role,
+                    name: user.name,
+                    email: user.email,
+                    avatarImage: user.avatarImage
+                }
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ errors: [{ msg: 'Server Error' }] });
@@ -66,7 +74,15 @@ router.post('/register', validateUserModel, async (req, res) => {
             user = new Applicant({ ...req.body });
         }
         const token = await registerUser(user);
-        return res.json({ token, role: user.role });
+        return res.json({
+            token,
+            user: {
+                role: user.role,
+                name: user.name,
+                email: user.email,
+                avatarImage: user.avatarImage
+            }
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });

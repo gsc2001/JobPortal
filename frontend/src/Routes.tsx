@@ -2,12 +2,15 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
+import { useTypedSelector } from './utils/hooks';
 import Login from './views/Auth/Login';
 import Dashboard from './views/Dashboard';
-import Home from './views/Home';
-import Profile from './views/Profile';
 
 const MainRoutes: React.FC = ({}) => {
+    const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);
+    if (isLoggedIn) {
+        return <Redirect to="/app/dashboard" />;
+    }
     return (
         <MainLayout>
             <Switch>
@@ -19,9 +22,21 @@ const MainRoutes: React.FC = ({}) => {
 };
 
 const DashboardRoutes: React.FC = ({}) => {
+    const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);
+
+    if (!isLoggedIn) {
+        return <Redirect to="/login" />;
+    }
     return (
         <DashboardLayout>
-            <Route exact path="/app/dashboard" component={() => <Dashboard />} />
+            <Switch>
+                <Route
+                    exact
+                    path="/app"
+                    component={() => <Redirect to="/app/dashboard" />}
+                />
+                <Route exact path="/app/dashboard" component={() => <Dashboard />} />
+            </Switch>
         </DashboardLayout>
     );
 };

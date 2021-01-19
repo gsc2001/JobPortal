@@ -2,20 +2,19 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgess from '@material-ui/core/CircularProgress';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Field, Form, Formik } from 'formik';
-import * as Yup from 'yup';
+
 import { FormikTextField } from './FormikTextField';
-import SelectInput from '@material-ui/core/Select/SelectInput';
-import { Box } from '@material-ui/core';
+import coreAPI from '../../api/core';
+import { useDispatch } from 'react-redux';
+import { authReset, authSuccess } from '../../store/auth';
+import { pushAlert } from '../../store/alerts';
+import { LoginSchema } from './schemas';
 
 interface LoginProps {}
 
@@ -50,6 +49,29 @@ const useStyles = makeStyles((theme: Theme) =>
 const Login: React.FC<LoginProps> = ({}) => {
     const classes = useStyles();
     const initialValues: LoginFormValues = { email: '', password: '', rememberMe: false };
+    const dispatch = useDispatch();
+
+    const login = async (userData: LoginFormValues) => {
+        try {
+            const _res = await coreAPI.login({
+                email: userData.email,
+                password: userData.password
+            });
+            console.log(_res);
+            if (userData.rememberMe) {
+                localStorage.setItem('GCS_JOBP', JSON.stringify(_res));
+            }
+            dispatch(authSuccess(_res));
+        } catch (err) {
+            console.log(err);
+            dispatch(authReset());
+            if (err.errors) {
+                err.errors.forEach((e: { msg: string }) =>
+                    dispatch(pushAlert({ text: e.msg, type: 'error' }))
+                );
+            }
+        }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -62,9 +84,8 @@ const Login: React.FC<LoginProps> = ({}) => {
                 </Typography>
                 <Formik
                     initialValues={initialValues}
-                    onSubmit={async a => {
-                        console.log(a);
-                    }}
+                    onSubmit={login}
+                    validationSchema={LoginSchema}
                 >
                     {({ isSubmitting }) => (
                         <Form>

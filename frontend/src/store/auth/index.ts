@@ -6,6 +6,7 @@ import { AppThunk } from '..';
 interface User {
     name: string;
     email: string;
+    avatarImage: string;
     role: 'applicant' | 'recruiter';
 }
 
@@ -29,7 +30,6 @@ const authSlice = createSlice({
             state.token = action.payload.token;
             state.isLoggedIn = true;
             state.user = action.payload.user;
-            localStorage.setItem('GSC_JOBP', state.token);
             axios.defaults.headers.common['Authorization'] = state.token;
         },
         authReset: state => {
