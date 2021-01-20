@@ -4,6 +4,7 @@ import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
 import { useTypedSelector } from './utils/hooks';
 import Login from './views/Auth/Login';
+import Register from './views/Auth/Register';
 import Dashboard from './views/Dashboard';
 
 const MainRoutes: React.FC = ({}) => {
@@ -16,6 +17,7 @@ const MainRoutes: React.FC = ({}) => {
             <Switch>
                 <Route exact path="/" component={() => <Redirect to="/login" />} />
                 <Route exact path="/login" component={() => <Login />} />
+                <Route exact path="/register" component={() => <Register />} />
             </Switch>
         </MainLayout>
     );

@@ -1,20 +1,21 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CircularProgess from '@material-ui/core/CircularProgress';
-import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Field, Form, Formik } from 'formik';
 
-import { FormikTextField } from './FormikTextField';
+import { FormikTextField } from '../../components/FormikTextField';
 import coreAPI from '../../api/core';
 import { useDispatch } from 'react-redux';
 import { authReset, authSuccess } from '../../store/auth';
 import { pushAlert } from '../../store/alerts';
 import { LoginSchema } from './schemas';
+import LoadingButton from '../../components/LoadingButton';
 
 interface LoginProps {}
 
@@ -111,25 +112,21 @@ const Login: React.FC<LoginProps> = ({}) => {
                                 <Field type="checkbox" name="rememberMe" />
                                 Remember me
                             </label>
-                            <Button
+                            <LoadingButton
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
                                 className={classes.submit}
                                 disabled={isSubmitting}
+                                loading={isSubmitting}
                             >
-                                {isSubmitting && (
-                                    <CircularProgess size={24} color="inherit" />
-                                )}
                                 Sign In
-                            </Button>
+                            </LoadingButton>
                         </Form>
                     )}
                 </Formik>
-                <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                </Link>
+                <Link to="/register">{"Don't have an account? Sign Up"}</Link>
             </div>
         </Container>
     );

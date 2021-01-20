@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
 const Alerts: React.FC<AlertsProps> = ({}) => {
     const classes = useStyles();
     const alerts = useTypedSelector(state => state.alerts);
+    if (!alerts.length) {
+        return <></>;
+    }
     return (
         <div className={classes.alerts}>
             {alerts.map(alert => (

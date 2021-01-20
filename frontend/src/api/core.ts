@@ -1,6 +1,6 @@
-import api, { APICreatingUtility } from './helper';
+import api from './helper';
 
-export default {
+const coreAPI = {
     async login(userData: Object) {
         return await api.post('/api/core/login', { body: userData });
     },
@@ -8,3 +8,5 @@ export default {
         return await api.post('/api/core/register', { body: userData });
     }
 };
+
+export default coreAPI;

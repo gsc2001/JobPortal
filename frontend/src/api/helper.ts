@@ -15,7 +15,7 @@ const getConfig = (payload: Payload): Object => {
     } else return {};
 };
 
-export default {
+const apiHelpers = {
     get(url: string, payload: Payload) {
         if (payload)
             return APICreatingUtility(
@@ -41,6 +41,8 @@ export default {
         return APICreatingUtility(axios.delete(url));
     }
 };
+
+export default apiHelpers;
 
 export const APICreatingUtility = async (promise: Promise<AxiosResponse<any>>) => {
     try {

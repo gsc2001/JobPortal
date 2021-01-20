@@ -119,7 +119,7 @@ router.patch(
  * @description Upload image
  * @access		private
  */
-router.post('/upload_image', auth, async (req, res) => {
+router.post('/upload_image', async (req, res) => {
     try {
         const image_res = await uploadImage(req.body.file);
         return res.json(image_res.data.image);
