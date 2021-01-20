@@ -18,7 +18,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import { useTypedSelector } from '../../utils/hooks';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

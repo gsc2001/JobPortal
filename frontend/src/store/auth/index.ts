@@ -8,18 +8,25 @@ interface User {
     email: string;
     avatarImage: string;
     role: 'applicant' | 'recruiter';
+    id: string;
 }
 
 interface authStateType {
     token: string;
     isLoggedIn: boolean;
-    user?: User;
+    user: User;
 }
 
 const initialState: authStateType = {
     token: '',
     isLoggedIn: false,
-    user: undefined
+    user: {
+        name: '',
+        email: '',
+        role: 'applicant',
+        avatarImage: '',
+        id: ''
+    }
 };
 
 const authSlice = createSlice({
@@ -35,7 +42,13 @@ const authSlice = createSlice({
         authReset: state => {
             state.token = '';
             state.isLoggedIn = false;
-            state.user = undefined;
+            state.user = {
+                name: '',
+                email: '',
+                role: 'applicant',
+                avatarImage: '',
+                id: ''
+            };
             localStorage.removeItem('GCS_JOBP');
             delete axios.defaults.headers.common['Authorization'];
         }
