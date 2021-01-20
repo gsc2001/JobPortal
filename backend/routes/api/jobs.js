@@ -26,7 +26,44 @@ router.get('/', auth, async (req, res) => {
                 applicationDeadline: { $gt: Date.now() }
             }).lean();
         } else {
-            jobs = await Job.find({ deadline: { $gt: Date.now() } }).lean();
+            jobs = await Job.find({ applicationDeadline: { $gt: Date.now() } })
+                .populate('recruiter', 'name')
+                .lean();
+
+            const _applications = await Application.find({
+                job: { $in: jobs.map(job => job._id) }
+            })
+                .select('_id job applicant')
+                .lean();
+            jobs.forEach((job, index) => {
+                jobs[index].recruiterName = job.recruiter.name;
+                let rating = 0;
+                Object.values(job.ratingMap).forEach(value => (rating += value));
+                const nRating = Object.keys(job.ratingMap).length;
+                if (nRating === 0) jobs[index].rating = -1;
+                else jobs[index].rating = rating / nRating;
+                delete jobs[index].ratingMap;
+
+                const jobApplications = _applications.filter(
+                    _application => String(_application.job) === String(job._id)
+                );
+
+                if (jobApplications.length >= job.maxApplications) {
+                    jobs[index].filled = true;
+                } else {
+                    jobs[index].filled = false;
+                }
+
+                if (
+                    jobApplications.filter(
+                        appl => String(appl.applicant) === String(req.user.id)
+                    ).length > 0
+                ) {
+                    jobs[index].applied = true;
+                } else jobs[index].applied = false;
+
+                delete jobs[index].recruiter;
+            });
         }
         return res.json({ jobs });
     } catch (err) {

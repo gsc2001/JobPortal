@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme, Toolbar } from '@material-ui/core';
 import { Switch } from 'react-router-dom';
 import SideDrawer from '../../components/SideDrawer';
 import TopBar from '../../components/TopBar';
+import Alerts from '../../components/Alerts';
 
 interface DashboardLayoutProps {}
 
@@ -27,6 +28,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <div className={classes.root}>
                 <SideDrawer />
                 <main className={classes.content}>{children}</main>
+                <Alerts />
             </div>
         </>
     );

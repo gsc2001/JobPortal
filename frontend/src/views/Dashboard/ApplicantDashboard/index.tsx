@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+    Button,
     Checkbox,
     createStyles,
     Divider,
@@ -20,6 +21,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Box from '@material-ui/core/Box';
+import ApplyDialog from './ApplyDialog';
 
 interface ApplicantDashboardProps {}
 
@@ -43,7 +46,7 @@ const columns: ColDef[] = [
         field: 'rating',
         headerName: 'Rating',
         valueFormatter: (params: ValueFormatterParams) => {
-            if (!params.value) {
+            if (params.value === -1) {
                 return '-';
             }
             return params.value;
@@ -60,7 +63,6 @@ const columns: ColDef[] = [
         sortable: false,
         disableColumnMenu: true
     },
-
     {
         field: 'applicationDeadline',
         headerName: 'Deadline',
@@ -73,6 +75,29 @@ const columns: ColDef[] = [
         },
         sortable: false,
         disableColumnMenu: true
+    },
+    {
+        field: 'filled',
+        headerName: 'Apply',
+        align: 'center',
+        renderCell: (params: ValueFormatterParams) => {
+            const applied = params.getValue('applied');
+            return (
+                <>
+                    {params.value ? (
+                        <Button disabled fullWidth>
+                            <strong>Full</strong>
+                        </Button>
+                    ) : applied ? (
+                        <Typography variant="button" color="primary">
+                            <strong>Applied</strong>
+                        </Typography>
+                    ) : (
+                        <ApplyDialog jobId={params.getValue('id') as string} />
+                    )}
+                </>
+            );
+        }
     }
 ];
 
@@ -86,9 +111,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type durationType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | '';
+type sortFieldType = keyof Omit<Job, 'requiredSkills' | 'jobType' | 'id'> | '';
 
 const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
-    const { data, error, mutate } = useSWR('get-all-jobs', () => jobsAPI.get());
+    const { data, error } = useSWR('get-all-jobs', () => jobsAPI.get());
     const [{ FT, PT, WFH }, setType] = useState({ FT: true, PT: true, WFH: true });
     const [duration, setDuration] = useState<durationType>('');
     const [salaryLim, setSalaryLim] = useState({
@@ -96,6 +122,10 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
         max: { value: '', error: '' }
     });
     const [search, setSearch] = useState('');
+    const [sort, setSort] = useState<{ field: sortFieldType; by: 1 | -1 | '' }>({
+        field: '',
+        by: ''
+    });
 
     if (!data) {
         return <div>Loading..</div>;
@@ -165,6 +195,22 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
         return f1 && f2 && f3 && f4 && f5;
     });
 
+    const sortField = sort.field;
+    if (sortField !== '' && sort.by !== '') {
+        jobs.sort((a, b) => {
+            if (typeof a[sortField] === 'number') {
+                return (a[sortField] as number) - (b[sortField] as number);
+            }
+            if (typeof a[sortField] === 'string') {
+                return (a[sortField] as string).localeCompare(b[sortField] as string);
+            }
+            return (a[sortField] as Date).getTime() - (b[sortField] as Date).getTime();
+        });
+        if (sort.by === -1) {
+            jobs.reverse();
+        }
+    }
+
     return (
         <div>
             <Grid container spacing={2} justify="space-between">
@@ -184,7 +230,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <div style={{ height: 500, width: '100%' }}>
+                            <div style={{ height: 700, width: '100%' }}>
                                 <DataGrid columns={columns} rows={jobs} />
                             </div>
                         </Grid>
@@ -282,6 +328,62 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
                                     <MenuItem value={5}>5</MenuItem>
                                     <MenuItem value={6}>6</MenuItem>
                                     <MenuItem value={7}>7</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <Box marginTop={2}>
+                                <Typography variant="h4">Sorting</Typography>
+                                <Divider />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Field</Typography>
+                            <FormControl variant="outlined" style={{ width: '100%' }}>
+                                <Select
+                                    fullWidth
+                                    margin="dense"
+                                    value={sort.field}
+                                    onChange={e =>
+                                        setSort({
+                                            ...sort,
+                                            field: e.target.value as sortFieldType
+                                        })
+                                    }
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {columns
+                                        .filter(col => col.field !== 'filled')
+                                        .map(col => (
+                                            <MenuItem value={col.field}>
+                                                {col.headerName}
+                                            </MenuItem>
+                                        ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Order</Typography>
+                            <FormControl variant="outlined" style={{ width: '100%' }}>
+                                <Select
+                                    fullWidth
+                                    margin="dense"
+                                    value={sort.by}
+                                    onChange={e =>
+                                        setSort({
+                                            ...sort,
+                                            by: e.target.value as 1 | -1 | ''
+                                        })
+                                    }
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value={1}>Ascending</MenuItem>
+                                    <MenuItem value={-1}>Descending</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>

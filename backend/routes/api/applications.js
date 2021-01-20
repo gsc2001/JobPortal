@@ -16,7 +16,9 @@ const router = express.Router();
 router.get('/', auth, async (req, res) => {
     try {
         if (req.user.role === roles.applicant) {
-            const applications = await Application.find({ applicant: req.user.id });
+            const applications = await Application.find({
+                applicant: req.user.id
+            }).lean();
             return res.json({ applications });
         } else {
             if (!req.query.jobId) {

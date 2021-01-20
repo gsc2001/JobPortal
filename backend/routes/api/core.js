@@ -38,7 +38,8 @@ router.post(
                     role: user.role,
                     name: user.name,
                     email: user.email,
-                    avatarImage: user.avatarImage
+                    avatarImage: user.avatarImage,
+                    id: user.id
                 }
             });
         } catch (err) {
@@ -80,7 +81,8 @@ router.post('/register', validateUserModel, async (req, res) => {
                 role: user.role,
                 name: user.name,
                 email: user.email,
-                avatarImage: user.avatarImage
+                avatarImage: user.avatarImage,
+                id: user.id
             }
         });
     } catch (err) {

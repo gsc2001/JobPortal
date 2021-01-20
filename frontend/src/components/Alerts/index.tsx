@@ -3,6 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 import { useTypedSelector } from '../../utils/hooks';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 interface AlertsProps {}
 
@@ -12,7 +13,8 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'fixed',
             width: '100%',
             padding: theme.spacing(3),
-            bottom: 0
+            bottom: 0,
+            zIndex: theme.zIndex.drawer + 1
         }
     })
 );
