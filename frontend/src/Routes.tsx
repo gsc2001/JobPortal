@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
 import { useTypedSelector } from './utils/hooks';
+import Application from './views/Applications';
 import Login from './views/Auth/Login';
 import Register from './views/Auth/Register';
 import Dashboard from './views/Dashboard';
@@ -38,6 +39,7 @@ const DashboardRoutes: React.FC = ({}) => {
                     component={() => <Redirect to="/app/dashboard" />}
                 />
                 <Route exact path="/app/dashboard" component={() => <Dashboard />} />
+                <Route exact path="/app/applications" component={() => <Application />} />
             </Switch>
         </DashboardLayout>
     );

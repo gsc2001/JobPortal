@@ -12,11 +12,16 @@ import {
 } from '@material-ui/core';
 import useSWR from 'swr';
 import { useTypedSelector } from '../../../utils/hooks';
-import { ColDef, DataGrid, ValueFormatterParams } from '@material-ui/data-grid';
+import {
+    ColDef,
+    DataGrid,
+    ValueFormatterParams,
+    ValueGetterParams
+} from '@material-ui/data-grid';
 import Grid from '@material-ui/core/Grid';
 import jobsAPI from '../../../api/jobs';
 import TextField from '@material-ui/core/TextField';
-import { Job } from '../../../utils/types';
+import { Job, User } from '../../../utils/types';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -39,17 +44,28 @@ const columns: ColDef[] = [
         headerName: 'Recruiter Name',
         width: 140,
         sortable: false,
-        disableColumnMenu: true
+        disableColumnMenu: true,
+        valueGetter: (params: ValueGetterParams) => {
+            return (params.getValue('recruiter') as Partial<User>).name;
+        }
     },
 
     {
         field: 'rating',
         headerName: 'Rating',
         valueFormatter: (params: ValueFormatterParams) => {
-            if (params.value === -1) {
+            const ratingMap = params.getValue('ratingMap') as Object;
+
+            let rating = 0;
+            Object.values(ratingMap).forEach(value => (rating += value));
+            const nRating = Object.keys(ratingMap).length;
+            if (nRating === 0) rating = -1;
+            else rating = rating / nRating;
+
+            if (rating === -1) {
                 return '-';
             }
-            return params.value;
+            return rating;
         },
         width: 80,
         sortable: false,

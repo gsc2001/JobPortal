@@ -36,14 +36,6 @@ router.get('/', auth, async (req, res) => {
                 .select('_id job applicant')
                 .lean();
             jobs.forEach((job, index) => {
-                jobs[index].recruiterName = job.recruiter.name;
-                let rating = 0;
-                Object.values(job.ratingMap).forEach(value => (rating += value));
-                const nRating = Object.keys(job.ratingMap).length;
-                if (nRating === 0) jobs[index].rating = -1;
-                else jobs[index].rating = rating / nRating;
-                delete jobs[index].ratingMap;
-
                 const jobApplications = _applications.filter(
                     _application => String(_application.job) === String(job._id)
                 );
@@ -61,8 +53,6 @@ router.get('/', auth, async (req, res) => {
                 ) {
                     jobs[index].applied = true;
                 } else jobs[index].applied = false;
-
-                delete jobs[index].recruiter;
             });
         }
         return res.json({ jobs });
@@ -200,7 +190,7 @@ router.post(
 
 /**
  * @route		POST /api/jobs/:id/rate
- * @description Get all jobs listing all for applicant / particular for recruiter
+ * @description Rate a job
  * @access		private
  */
 router.post(
@@ -229,13 +219,17 @@ router.post(
             })
                 .select('job')
                 .lean();
+            console.log(application);
 
-            if (!application || application.job !== job.id) {
+            if (
+                application.length === 0 ||
+                String(application[0].job) !== String(job.id)
+            ) {
                 return res.status(401).json({ errors: [{ msg: 'Not an employee' }] });
             }
 
             // Rate now
-            job.ratingMap.set(req.user.id, req.body.rating);
+            job.ratingMap.set(req.user.id, +req.body.rating);
 
             await job.save();
             return res.json({ job });

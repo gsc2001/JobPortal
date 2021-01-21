@@ -18,7 +18,13 @@ router.get('/', auth, async (req, res) => {
         if (req.user.role === roles.applicant) {
             const applications = await Application.find({
                 applicant: req.user.id
-            }).lean();
+            })
+                .populate({
+                    path: 'job',
+                    select: 'recruiter name salary ratingMap',
+                    populate: { path: 'recruiter', select: 'name' }
+                })
+                .lean();
             return res.json({ applications });
         } else {
             if (!req.query.jobId) {
