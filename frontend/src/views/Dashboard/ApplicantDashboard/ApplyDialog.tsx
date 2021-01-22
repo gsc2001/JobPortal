@@ -37,6 +37,7 @@ const ApplyDialog: React.FC<ApplyDialogProps> = ({ jobId }) => {
     const [open, setOpen] = React.useState(false);
     const dispatch = useDispatch();
 
+    console.log(jobId);
     const handleClickOpen = () => {
         setOpen(true);
     };

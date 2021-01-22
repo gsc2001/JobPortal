@@ -21,10 +21,27 @@ router.get('/', auth, async (req, res) => {
         let jobs;
         if (req.user.role === roles.recruiter) {
             jobs = await Job.find({
-                recruiter: req.user.id,
-                // NOTE: A doubt here can recruiter see job lising after deadline pass
-                applicationDeadline: { $gt: Date.now() }
+                recruiter: req.user.id
             }).lean();
+
+            const applications = await Application.find({
+                job: { $in: jobs.map(job => job._id) }
+            });
+
+            jobs.forEach((job, i) => {
+                const _applications = applications.filter(
+                    _appl => String(_appl.job) === String(job._id)
+                );
+                const nApplicants = _applications.length;
+                const rPositions =
+                    job.maxPositions -
+                    _applications.filter(
+                        _appl => _appl.status === applicationStatus.Accepted
+                    ).length;
+
+                jobs[i].nApplicants = nApplicants;
+                jobs[i].rPositions = rPositions;
+            });
         } else {
             jobs = await Job.find({ applicationDeadline: { $gt: Date.now() } })
                 .populate('recruiter', 'name')

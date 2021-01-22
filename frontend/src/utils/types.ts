@@ -22,6 +22,8 @@ export interface Job {
     duration: number;
     salary: number;
     ratingMap: RatingMap;
+    nApplicants?: number;
+    rPositions?: number;
 }
 
 export interface Application {

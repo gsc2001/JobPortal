@@ -7,6 +7,7 @@ import Application from './views/Applications';
 import Login from './views/Auth/Login';
 import Register from './views/Auth/Register';
 import Dashboard from './views/Dashboard';
+import Employees from './views/Employees/Employees';
 
 const MainRoutes: React.FC = ({}) => {
     const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);
@@ -25,9 +26,9 @@ const MainRoutes: React.FC = ({}) => {
 };
 
 const DashboardRoutes: React.FC = ({}) => {
-    const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);
+    const auth = useTypedSelector(state => state.auth);
 
-    if (!isLoggedIn) {
+    if (!auth.isLoggedIn) {
         return <Redirect to="/login" />;
     }
     return (
@@ -40,6 +41,9 @@ const DashboardRoutes: React.FC = ({}) => {
                 />
                 <Route exact path="/app/dashboard" component={() => <Dashboard />} />
                 <Route exact path="/app/applications" component={() => <Application />} />
+                {auth.user.role === 'recruiter' && (
+                    <Route exact path="/app/employees" component={() => <Employees />} />
+                )}
             </Switch>
         </DashboardLayout>
     );

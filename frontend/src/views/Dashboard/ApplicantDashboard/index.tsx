@@ -6,6 +6,7 @@ import {
     Divider,
     FormControlLabel,
     FormGroup,
+    FormLabel,
     makeStyles,
     Theme,
     Typography
@@ -326,6 +327,7 @@ const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({}) => {
                             <Typography variant="h6">Duration Less than</Typography>
                             <FormControl variant="outlined" style={{ width: '100%' }}>
                                 <Select
+                                    labelId="label"
                                     id="demo-simple-select-outlined"
                                     fullWidth
                                     margin="dense"

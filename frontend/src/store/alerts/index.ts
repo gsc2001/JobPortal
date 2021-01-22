@@ -9,7 +9,7 @@ export interface Alert {
 
 const initialState: Alert[] = [];
 
-let alertId = 0;
+export let alertId = 0;
 const alertSlice = createSlice({
     name: 'alerts',
     initialState: initialState,
@@ -25,7 +25,7 @@ const alertSlice = createSlice({
     }
 });
 
-const { addAlert, removeAlert } = alertSlice.actions;
+export const { addAlert, removeAlert } = alertSlice.actions;
 
 export default alertSlice.reducer;
 

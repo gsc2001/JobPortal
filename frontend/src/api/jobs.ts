@@ -1,5 +1,3 @@
-import { pink } from '@material-ui/core/colors';
-import RateCell from '../views/Applications/ApplicantApplications/RateCell';
 import api from './helper';
 
 const jobsAPI = {
@@ -12,6 +10,15 @@ const jobsAPI = {
     },
     async rate(jobId: string, rating: number) {
         return await api.post(`/api/jobs/${jobId}/rate`, { body: { rating } });
+    },
+    async add(job: Object) {
+        return await api.post('/api/jobs', { body: { ...job } });
+    },
+    async delete(jobId: string) {
+        return await api.delete(`/api/jobs/${jobId}`);
+    },
+    async edit(jobId: string, jobUpdateData: Object) {
+        return await api.put(`/api/jobs/${jobId}`, { body: { ...jobUpdateData } });
     }
 };
 
