@@ -19,15 +19,7 @@ import LoadingButton from '../LoadingButton';
 import { useDispatch } from 'react-redux';
 import { pushAlert } from '../../store/alerts';
 import { authReset } from '../../store/auth';
-
-export interface Applicant {
-    name: string;
-    email: string;
-    avatarImage: string;
-    role: 'applicant';
-    education: [{ instituteName: string; startYear: string; endYear?: string }];
-    skills: Array<string>;
-}
+import { Applicant } from '../../utils/types';
 
 interface RegisterApplicant extends Applicant {
     password: string;
@@ -96,6 +88,7 @@ const ApplicantForm: React.FC<ApplicantFormProps> = ({
                             variant="outlined"
                             margin="dense"
                             fullWidth
+                            disabled={!register}
                             label="Email Address"
                             autoComplete="email"
                         />
@@ -190,6 +183,7 @@ const ApplicantForm: React.FC<ApplicantFormProps> = ({
                                                     variant="outlined"
                                                     margin="dense"
                                                     label="Start Year"
+                                                    type="number"
                                                 />
                                             </Grid>
                                             <Grid item xs={5}>
@@ -198,6 +192,7 @@ const ApplicantForm: React.FC<ApplicantFormProps> = ({
                                                     variant="outlined"
                                                     margin="dense"
                                                     label="End Year"
+                                                    type="number"
                                                 />
                                             </Grid>
                                             <Grid item xs={3}>

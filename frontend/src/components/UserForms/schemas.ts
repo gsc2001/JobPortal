@@ -6,8 +6,14 @@ const ApplicantBase = {
     education: Yup.array().of(
         Yup.object().shape({
             instituteName: Yup.string().required('Institute Name is required!'),
-            startYear: Yup.string().required('Start Year is required'),
-            endYear: Yup.string()
+            startYear: Yup.number().required('Start Year is required'),
+            endYear: Yup.number().when('startYear', {
+                is: undefined,
+                then: Yup.number().notRequired(),
+                otherwise: Yup.number()
+                    .notRequired()
+                    .min((Yup.ref('startYear') as unknown) as number)
+            })
         })
     )
 };

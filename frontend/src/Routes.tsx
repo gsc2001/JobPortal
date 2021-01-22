@@ -8,6 +8,7 @@ import Login from './views/Auth/Login';
 import Register from './views/Auth/Register';
 import Dashboard from './views/Dashboard';
 import Employees from './views/Employees';
+import Profile from './views/Profile';
 
 const MainRoutes: React.FC = ({}) => {
     const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);
@@ -41,6 +42,7 @@ const DashboardRoutes: React.FC = ({}) => {
                 />
                 <Route exact path="/app/dashboard" component={() => <Dashboard />} />
                 <Route exact path="/app/applications" component={() => <Application />} />
+                <Route exact path="/app/profile" component={() => <Profile />} />
                 {auth.user.role === 'recruiter' && (
                     <Route exact path="/app/employees" component={() => <Employees />} />
                 )}

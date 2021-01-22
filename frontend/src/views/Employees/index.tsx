@@ -5,7 +5,7 @@ import React from 'react';
 import useSWR from 'swr';
 import userAPI from '../../api/user';
 import { useTypedSelector } from '../../utils/hooks';
-import { Job, User, EmployeeApplication, RatingMap } from '../../utils/types';
+import { Job, User, EmployeeApplication, RatingMap, Applicant } from '../../utils/types';
 import RateCell from '../../components/RateCell';
 import { pushAlert } from '../../store/alerts';
 import { useDispatch } from 'react-redux';
@@ -85,7 +85,7 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
                 return (
                     <RateCell
                         ratingMap={
-                            (params.getValue('applicant') as Partial<User>)
+                            (params.getValue('applicant') as Partial<Applicant>)
                                 .ratingMap as RatingMap
                         }
                         onRate={onRate(
@@ -102,7 +102,7 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
             field: 'avgRating',
             headerName: 'Average Rating',
             valueFormatter: (params: ValueFormatterParams) => {
-                const ratingMap = (params.getValue('applicant') as Partial<User>)
+                const ratingMap = (params.getValue('applicant') as Partial<Applicant>)
                     .ratingMap as RatingMap;
 
                 const rating = getRatingfromMap(ratingMap);

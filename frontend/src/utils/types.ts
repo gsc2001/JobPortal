@@ -1,10 +1,27 @@
 export interface User {
-    _id: string;
+    _id?: string;
     name: string;
     avatarImage: string;
     email: string;
     role: 'applicant' | 'recruiter';
+}
+
+export interface Education {
+    instituteName: string;
+    startYear: number | '';
+    endYear?: number | '';
+}
+
+export interface Applicant extends User {
+    role: 'applicant';
     ratingMap?: RatingMap;
+    education: Education[];
+    skills: Array<string>;
+}
+
+export interface Recruiter extends User {
+    contactNumber: string;
+    bio: string;
 }
 
 export interface RatingMap {

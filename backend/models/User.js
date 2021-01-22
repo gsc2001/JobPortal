@@ -49,12 +49,9 @@ const ApplicantSchema = new mongoose.Schema({
         type: [
             {
                 instituteName: text,
-                startYear: {
-                    type: Date,
-                    required: true
-                },
+                startYear: number,
                 endYear: {
-                    type: Date
+                    type: Number
                 }
             }
         ],

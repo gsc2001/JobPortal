@@ -53,7 +53,8 @@ router.patch(
                     {
                         name: req.body.name,
                         contactNumber: req.body.contactNumber,
-                        bio: req.body.bio
+                        bio: req.body.bio,
+                        avatarImage: req.body.avatarImage
                     },
                     { new: true }
                 );
@@ -63,7 +64,8 @@ router.patch(
                     {
                         name: req.body.name,
                         education: req.body.education,
-                        skills: req.body.skills
+                        skills: req.body.skills,
+                        avatarImage: req.body.avatarImage
                     },
                     { new: true }
                 );

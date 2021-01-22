@@ -8,21 +8,13 @@ import { Formik, Form } from 'formik';
 
 import { FormikTextField } from '../FormikTextField';
 import ImageUploader from './ImageUploader';
-import { RegisterRecruiterSchema } from './schemas';
+import { RecruiterSchema, RegisterRecruiterSchema } from './schemas';
 import { randomNumber } from '../../utils';
 import LoadingButton from '../LoadingButton';
 import { useDispatch } from 'react-redux';
 import { authReset } from '../../store/auth';
 import { pushAlert } from '../../store/alerts';
-
-export interface Recruiter {
-    name: string;
-    email: string;
-    avatarImage: string;
-    role: 'recruiter';
-    bio: string;
-    contactNumber: string;
-}
+import { Recruiter } from '../../utils/types';
 
 interface RegisterRecruiter extends Recruiter {
     password: string;
@@ -50,7 +42,6 @@ const RecruiterForm: React.FC<RecruiterFormProps> = ({
     onSubmit
 }) => {
     const classes = useStyles();
-
     const dispatch = useDispatch();
 
     return (
@@ -76,7 +67,7 @@ const RecruiterForm: React.FC<RecruiterFormProps> = ({
                 }
                 return;
             }}
-            validationSchema={register ? RegisterRecruiterSchema : RecruiterForm}
+            validationSchema={register ? RegisterRecruiterSchema : RecruiterSchema}
         >
             {({ values, setFieldValue, isSubmitting }) => (
                 <Form>
@@ -94,6 +85,7 @@ const RecruiterForm: React.FC<RecruiterFormProps> = ({
                             variant="outlined"
                             margin="dense"
                             fullWidth
+                            disabled={!register}
                             label="Email Address"
                             autoComplete="email"
                         />

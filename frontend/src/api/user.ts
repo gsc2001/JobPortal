@@ -13,6 +13,9 @@ const userAPI = {
     },
     async rate(userId: string, rating: number) {
         return await api.patch(`/api/user/rate/${userId}`, { body: { rating } });
+    },
+    async updateMe(userData: Object) {
+        return await api.patch('/api/user/me', { body: userData });
     }
 };
 

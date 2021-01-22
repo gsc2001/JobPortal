@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { AppThunk } from '..';
 
-interface User {
+interface UserStateType {
     name: string;
     email: string;
     avatarImage: string;
@@ -14,7 +14,7 @@ interface User {
 interface authStateType {
     token: string;
     isLoggedIn: boolean;
-    user: User;
+    user: UserStateType;
 }
 
 const initialState: authStateType = {
@@ -33,7 +33,10 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        authSuccess: (state, action: PayloadAction<{ token: string; user: User }>) => {
+        authSuccess: (
+            state,
+            action: PayloadAction<{ token: string; user: UserStateType }>
+        ) => {
             state.token = action.payload.token;
             state.isLoggedIn = true;
             state.user = action.payload.user;
@@ -51,12 +54,13 @@ const authSlice = createSlice({
             };
             localStorage.removeItem('GCS_JOBP');
             delete axios.defaults.headers.common['Authorization'];
+        },
+        updateUser: (state, action: PayloadAction<UserStateType>) => {
+            state.user = action.payload;
         }
     }
 });
 
-const { authReset, authSuccess } = authSlice.actions;
+export const { authReset, authSuccess, updateUser } = authSlice.actions;
 
 export default authSlice.reducer;
-
-export { authReset, authSuccess };
