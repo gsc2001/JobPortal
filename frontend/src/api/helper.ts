@@ -17,7 +17,7 @@ const getConfig = (payload: Payload): Object => {
 
 const apiHelpers = {
     get(url: string, payload: Payload = {}) {
-        if (payload)
+        if (payload.query)
             return APICreatingUtility(
                 axios.get(url, {
                     params: {

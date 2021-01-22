@@ -18,6 +18,9 @@ const ApplicationSchema = new mongoose.Schema(
             type: String,
             enum: [...Object.values(applicationStatus)],
             default: applicationStatus.Standby
+        },
+        doj: {
+            type: Date
         }
     },
     { timestamps: { createdAt: true, updatedAt: false } }

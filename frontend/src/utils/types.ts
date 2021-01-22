@@ -1,8 +1,10 @@
 export interface User {
+    _id: string;
     name: string;
     avatarImage: string;
     email: string;
     role: 'applicant' | 'recruiter';
+    ratingMap?: RatingMap;
 }
 
 export interface RatingMap {
@@ -33,4 +35,11 @@ export interface Application {
     sop: string;
     status: 'STB' | 'REJ' | 'SHL' | 'ACC';
     createdAt: Date;
+}
+
+export interface EmployeeApplication {
+    _id: string;
+    id: string;
+    applicant: Partial<User>;
+    job: Partial<Job>;
 }

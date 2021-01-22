@@ -78,7 +78,7 @@ router.put(
             }
             let applicationPromises = [];
             if (req.body.status === applicationStatus.Accepted) {
-                // if update is to accept, check max positions check applicant acceptance
+                // if update is to accept, check max positions check applicant acceptance, set doj
                 // and also move all other applications to rejected
                 console.log('hi');
                 const [filledPositions, _applications] = await Promise.all([
@@ -112,6 +112,7 @@ router.put(
                     _application.status = applicationStatus.Rejected;
                     return _application.save();
                 });
+                application.doj = new Date();
             }
 
             // update status now

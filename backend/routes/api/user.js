@@ -8,6 +8,7 @@ const { roles } = require('../../utils/enums');
 const { validateUserModel } = require('../../middleware/validators');
 const { applicationStatus } = require('../../utils/enums');
 const uploadImage = require('../../utils/uploadImage');
+const Job = require('../../models/Job');
 
 const router = express.Router();
 
@@ -123,6 +124,29 @@ router.post('/upload_image', async (req, res) => {
     try {
         const image_res = await uploadImage(req.body.file);
         return res.json(image_res.data.image);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+});
+
+/**
+ * @route		Get /api/user/employees
+ * @description Get all employees for a person
+ * @access		private + recruiter only
+ */
+router.get('/employees', [auth, isRecruiter], async (req, res) => {
+    try {
+        const jobs = await Job.find({ recruiter: req.user.id }).select('_id').lean();
+        const applications = await Application.find({
+            job: { $in: jobs.map(job => job._id) },
+            status: applicationStatus.Accepted
+        })
+            .select('applicant job doj')
+            .populate('applicant', 'name ratingMap')
+            .populate('job', 'jobType name');
+
+        return res.json({ applications });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ errors: [{ msg: 'Server Error' }] });

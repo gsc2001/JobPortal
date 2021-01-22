@@ -7,7 +7,7 @@ import Application from './views/Applications';
 import Login from './views/Auth/Login';
 import Register from './views/Auth/Register';
 import Dashboard from './views/Dashboard';
-import Employees from './views/Employees/Employees';
+import Employees from './views/Employees';
 
 const MainRoutes: React.FC = ({}) => {
     const isLoggedIn = useTypedSelector(state => state.auth.isLoggedIn);

@@ -22,13 +22,14 @@ import {
 import Grid from '@material-ui/core/Grid';
 import jobsAPI from '../../../api/jobs';
 import TextField from '@material-ui/core/TextField';
-import { Job, User } from '../../../utils/types';
+import { Job, RatingMap, User } from '../../../utils/types';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Box from '@material-ui/core/Box';
 import ApplyDialog from './ApplyDialog';
+import { getRatingfromMap } from '../../../utils';
 
 interface ApplicantDashboardProps {}
 
@@ -55,13 +56,9 @@ const columns: ColDef[] = [
         field: 'rating',
         headerName: 'Rating',
         valueFormatter: (params: ValueFormatterParams) => {
-            const ratingMap = params.getValue('ratingMap') as Object;
+            const ratingMap = params.getValue('ratingMap') as RatingMap;
 
-            let rating = 0;
-            Object.values(ratingMap).forEach(value => (rating += value));
-            const nRating = Object.keys(ratingMap).length;
-            if (nRating === 0) rating = -1;
-            else rating = rating / nRating;
+            const rating = getRatingfromMap(ratingMap);
 
             if (rating === -1) {
                 return '-';
