@@ -6,6 +6,8 @@ export interface User {
     role: 'applicant' | 'recruiter';
 }
 
+export type ApplicationStatus = 'ACC' | 'REJ' | 'SHL' | 'STB';
+
 export interface Education {
     instituteName: string;
     startYear: number | '';

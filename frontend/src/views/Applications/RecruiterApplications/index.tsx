@@ -6,15 +6,27 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
+import {
+    DataGrid,
+    ColDef,
+    ValueGetterParams,
+    ValueFormatterParams
+} from '@material-ui/data-grid';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 import applicationAPI from '../../../api/applications';
+import LoadingButton from '../../../components/LoadingButton';
 import { pushAlert } from '../../../store/alerts';
 import { getRatingfromMap } from '../../../utils';
-import { Applicant, Application, RatingMap } from '../../../utils/types';
+import {
+    Applicant,
+    Application,
+    ApplicationStatus,
+    RatingMap
+} from '../../../utils/types';
+import StageCell from './StageCell';
 
 interface RecruiterApplicationsProps {}
 
@@ -131,6 +143,22 @@ const RecruiterApplications: React.FC<RecruiterApplicationsProps> = ({}) => {
                 if (rating == -1) {
                     return '-';
                 } else return rating;
+            }
+        },
+        {
+            field: 'status',
+            headerName: 'Stage of Application',
+            sortable: false,
+            disableColumnMenu: true,
+            flex: 2,
+            renderCell: (params: ValueFormatterParams) => {
+                return (
+                    <StageCell
+                        currentStage={params.value as ApplicationStatus}
+                        onChangeDone={() => mutate()}
+                        applicationId={params.getValue('id') as string}
+                    />
+                );
             }
         }
     ];
