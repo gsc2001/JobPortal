@@ -48,7 +48,7 @@ export interface Job {
 export interface Application {
     id: string;
     job: Partial<Job>;
-    applicant: Partial<User>;
+    applicant: Partial<Applicant>;
     sop: string;
     status: 'STB' | 'REJ' | 'SHL' | 'ACC';
     createdAt: Date;
@@ -57,6 +57,7 @@ export interface Application {
 export interface EmployeeApplication {
     _id: string;
     id: string;
-    applicant: Partial<User>;
+    applicant: Partial<Applicant>;
     job: Partial<Job>;
+    doj: Date;
 }

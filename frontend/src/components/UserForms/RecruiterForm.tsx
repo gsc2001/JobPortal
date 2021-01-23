@@ -132,6 +132,7 @@ const RecruiterForm: React.FC<RecruiterFormProps> = ({
                         <FormikTextField
                             formikKey="bio"
                             multiline
+                            rows={4}
                             label="Bio"
                             fullWidth
                             margin="dense"

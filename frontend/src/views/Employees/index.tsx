@@ -10,8 +10,16 @@ import RateCell from '../../components/RateCell';
 import { pushAlert } from '../../store/alerts';
 import { useDispatch } from 'react-redux';
 import { getRatingfromMap } from '../../utils';
+import { useState } from 'react';
+import Box from '@material-ui/core/Box';
+import Divider from '@material-ui/core/Divider';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
 
 interface EmployeesProps {}
+
+type sortFieldType = 'applicantName' | 'doj' | 'applicantRating' | 'jobTitle' | '';
 
 const Employees: React.FC<EmployeesProps> = ({}) => {
     const userId = useTypedSelector(state => state.auth.user.id);
@@ -19,6 +27,10 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
         userAPI.getEmployees()
     );
     const dispatch = useDispatch();
+    const [sort, setSort] = useState<{ field: sortFieldType; by: 1 | -1 | '' }>({
+        field: '',
+        by: ''
+    });
 
     if (!data) return <div>Loading</div>;
 
@@ -118,21 +130,105 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
         }
     ];
 
-    const employees = data.applications.map((appl: EmployeeApplication) => ({
-        ...appl,
-        id: appl._id
-    }));
+    const employees: EmployeeApplication[] = data.applications.map(
+        (appl: EmployeeApplication) => ({
+            ...appl,
+            id: appl._id
+        })
+    );
+
+    const sortField = sort.field;
+    if (sortField !== '' && sort.by !== '') {
+        employees.sort((a, b) => {
+            if (sortField === 'applicantName') {
+                return (a.applicant.name as string).localeCompare(
+                    b.applicant.name as string
+                );
+            } else if (sortField === 'applicantRating') {
+                const aRating = getRatingfromMap(a.applicant.ratingMap as RatingMap);
+                const bRating = getRatingfromMap(a.applicant.ratingMap as RatingMap);
+                return aRating - bRating;
+            } else if (sortField === 'jobTitle') {
+                return (a.job.name as string).localeCompare(b.job.name as string);
+            } else {
+                return a.doj.getTime() - b.doj.getTime();
+            }
+        });
+        if (sort.by === -1) {
+            employees.reverse();
+        }
+    }
 
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h3"> My Employees </Typography>
-                {/* {JSON.stringify(employees)} */}
+                {JSON.stringify(employees)}
             </Grid>
-            <Grid item xs={12}>
-                <div style={{ height: 700, width: '100%' }}>
-                    <DataGrid columns={columns} rows={employees} />
-                </div>
+            <Grid item xs={9}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <div style={{ height: 700, width: '100%' }}>
+                            <DataGrid columns={columns} rows={employees} />
+                        </div>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid item xs={3}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Box marginTop={2}>
+                            <Typography variant="h4">Sorting</Typography>
+                            <Divider />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">Field</Typography>
+                        <FormControl variant="outlined" style={{ width: '100%' }}>
+                            <Select
+                                fullWidth
+                                margin="dense"
+                                value={sort.field}
+                                onChange={e =>
+                                    setSort({
+                                        ...sort,
+                                        field: e.target.value as sortFieldType
+                                    })
+                                }
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value="applicantName">Name</MenuItem>
+                                <MenuItem value="applicantRating">Rating</MenuItem>
+                                <MenuItem value="doj">Date of Joining</MenuItem>
+                                <MenuItem value="jobTitle">Job Title</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6">Order</Typography>
+                        <FormControl variant="outlined" style={{ width: '100%' }}>
+                            <Select
+                                fullWidth
+                                margin="dense"
+                                value={sort.by}
+                                onChange={e =>
+                                    setSort({
+                                        ...sort,
+                                        by: e.target.value as 1 | -1 | ''
+                                    })
+                                }
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={1}>Ascending</MenuItem>
+                                <MenuItem value={-1}>Descending</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     );

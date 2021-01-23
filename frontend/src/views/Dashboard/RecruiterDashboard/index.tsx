@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { pushAlert } from '../../../store/alerts';
 import EditJob from './EditJob';
 import { dateTimeFormat } from './schemas';
+import { useHistory } from 'react-router-dom';
 
 interface RecruiterDashboardProps {}
 
@@ -22,6 +23,7 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({}) => {
     const userId = useTypedSelector(state => state.auth.user.id);
     const { data, error, mutate } = useSWR(`get-jobs-${userId}`, () => jobsAPI.get());
     const dispatch = useDispatch();
+    const history = useHistory();
 
     if (!data) {
         return <div>Loading..</div>;
@@ -134,7 +136,15 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({}) => {
             </Grid>
             <Grid item xs={12}>
                 <div style={{ height: 700, width: '100%' }}>
-                    <DataGrid columns={columns} rows={jobs} />
+                    <DataGrid
+                        columns={columns}
+                        rows={jobs}
+                        onRowClick={params => {
+                            history.push(
+                                `/app/applications?for=${params.getValue('id')}`
+                            );
+                        }}
+                    />
                 </div>
             </Grid>
         </Grid>

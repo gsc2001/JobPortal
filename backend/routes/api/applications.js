@@ -35,7 +35,7 @@ router.get('/', auth, async (req, res) => {
             const applications = await Application.find({
                 job: jobId,
                 status: { $ne: applicationStatus.Rejected }
-            });
+            }).populate('applicant', 'name skills education ratingMap');
 
             return res.json({ applications });
         }
