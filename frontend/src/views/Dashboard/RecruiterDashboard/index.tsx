@@ -139,10 +139,10 @@ const RecruiterDashboard: React.FC<RecruiterDashboardProps> = ({}) => {
                     <DataGrid
                         columns={columns}
                         rows={jobs}
-                        onRowClick={params => {
-                            history.push(
-                                `/app/applications?for=${params.getValue('id')}`
-                            );
+                        onCellClick={a => {
+                            if (a.field !== 'edit,delete') {
+                                history.push(`/app/applications?for=${a.getValue('id')}`);
+                            }
                         }}
                     />
                 </div>

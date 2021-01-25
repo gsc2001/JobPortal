@@ -146,12 +146,12 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
                 );
             } else if (sortField === 'applicantRating') {
                 const aRating = getRatingfromMap(a.applicant.ratingMap as RatingMap);
-                const bRating = getRatingfromMap(a.applicant.ratingMap as RatingMap);
+                const bRating = getRatingfromMap(b.applicant.ratingMap as RatingMap);
                 return aRating - bRating;
             } else if (sortField === 'jobTitle') {
                 return (a.job.name as string).localeCompare(b.job.name as string);
             } else {
-                return a.doj.getTime() - b.doj.getTime();
+                return new Date(a.doj).getTime() - new Date(b.doj).getTime();
             }
         });
         if (sort.by === -1) {

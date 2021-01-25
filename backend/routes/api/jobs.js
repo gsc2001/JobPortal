@@ -42,6 +42,8 @@ router.get('/', auth, async (req, res) => {
                 jobs[i].nApplicants = nApplicants;
                 jobs[i].rPositions = rPositions;
             });
+
+            jobs = jobs.filter(_job => _job.rPositions > 0);
         } else {
             jobs = await Job.find({ applicationDeadline: { $gt: Date.now() } })
                 .populate('recruiter', 'name')
@@ -56,8 +58,14 @@ router.get('/', auth, async (req, res) => {
                 const jobApplications = _applications.filter(
                     _application => String(_application.job) === String(job._id)
                 );
+                const filledPositions = jobApplications.filter(
+                    _appl => _appl.status === applicationStatus.Accepted
+                );
 
-                if (jobApplications.length >= job.maxApplications) {
+                if (
+                    jobApplications.length >= job.maxApplications ||
+                    filledPositions.length >= job.maxPositions
+                ) {
                     jobs[index].filled = true;
                 } else {
                     jobs[index].filled = false;
@@ -224,7 +232,6 @@ router.post(
         try {
             // Restrictions: Should be an employee of that job
 
-            // TODO: try selecting ratingMap here
             const job = await Job.findById(req.params.id);
             if (!job) {
                 return res.status(400).json({ errors: [{ msg: 'No such job ' }] });
