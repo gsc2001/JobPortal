@@ -8,6 +8,7 @@ export interface User {
 
 export type ApplicationStatus = 'ACC' | 'REJ' | 'SHL' | 'STB';
 
+
 export interface Education {
     instituteName: string;
     startYear: number | '';

@@ -10,7 +10,6 @@ const ApplicationSchema = new mongoose.Schema(
         },
         applicant: {
             type: mongoose.Schema.Types.ObjectId,
-            // TODO: verify this with 'applicant'
             ref: 'user'
         },
         sop: text,

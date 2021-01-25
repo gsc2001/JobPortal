@@ -98,14 +98,14 @@ const columns: ColDef[] = [
             const applied = params.getValue('applied');
             return (
                 <>
-                    {params.value ? (
-                        <Button disabled fullWidth>
-                            <strong>Full</strong>
-                        </Button>
-                    ) : applied ? (
+                    {applied ? (
                         <Typography variant="button" color="primary">
                             <strong>Applied</strong>
                         </Typography>
+                    ) : params.value ? (
+                        <Button disabled fullWidth>
+                            <strong>Full</strong>
+                        </Button>
                     ) : (
                         <ApplyDialog jobId={params.getValue('id') as string} />
                     )}

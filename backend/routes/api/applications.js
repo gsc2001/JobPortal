@@ -79,17 +79,23 @@ router.put(
             let applicationPromises = [];
             if (req.body.status === applicationStatus.Accepted) {
                 // if update is to accept, check max positions check applicant acceptance, set doj
-                // and also move all other applications to rejected
+                // and also move all other applications for both job and user to rejected
+
                 console.log('hi');
-                const [filledPositions, _applications] = await Promise.all([
+                const [jobApplications, _applications] = await Promise.all([
                     Application.find({
                         job: application.job.id,
-                        status: applicationStatus.Accepted
+                        applicant: { $ne: application.applicant }
                     }),
                     Application.find({
                         applicant: application.applicant
                     })
                 ]);
+
+                const filledPositions = jobApplications.filter(
+                    appl => appl.status === applicationStatus.Accepted
+                );
+
                 console.log(filledPositions, _applications);
                 const isAlreadyAccepted =
                     _applications.filter(
@@ -112,6 +118,19 @@ router.put(
                     _application.status = applicationStatus.Rejected;
                     return _application.save();
                 });
+
+                if (filledPositions.length + 1 >= application.job.maxPositions) {
+                    const nonAcceptedApplications = jobApplications.filter(
+                        appl => appl.status !== applicationStatus.Accepted
+                    );
+                    applicationPromises.concat(
+                        nonAcceptedApplications.map(_appl => {
+                            _appl.status = applicationStatus.Rejected;
+                            return _appl.save();
+                        })
+                    );
+                }
+
                 application.doj = new Date();
             }
 

@@ -161,6 +161,23 @@ const ApplicantForm: React.FC<ApplicantFormProps> = ({
                         render={arrayHelpers => (
                             <Box paddingY={1}>
                                 <Typography variant="h6"> Education </Typography>
+                                {values.education.length === 0 && (
+                                    <>
+                                        <Button
+                                            onClick={() =>
+                                                arrayHelpers.push({
+                                                    instituteName: '',
+                                                    startYear: '',
+                                                    endYear: ''
+                                                })
+                                            }
+                                            fullWidth
+                                            color="secondary"
+                                        >
+                                            Add
+                                        </Button>
+                                    </>
+                                )}
                                 {values.education.map((_, index) => (
                                     <Box paddingY={1} key={index}>
                                         <Grid
