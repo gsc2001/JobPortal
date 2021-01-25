@@ -22,7 +22,6 @@ interface LoginProps {}
 interface LoginFormValues {
     email: string;
     password: string;
-    rememberMe: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Login: React.FC<LoginProps> = ({}) => {
     const classes = useStyles();
-    const initialValues: LoginFormValues = { email: '', password: '', rememberMe: false };
+    const initialValues: LoginFormValues = { email: '', password: '' };
     const dispatch = useDispatch();
 
     const login = async (userData: LoginFormValues) => {
@@ -59,9 +58,9 @@ const Login: React.FC<LoginProps> = ({}) => {
                 password: userData.password
             });
             console.log(_res);
-            if (userData.rememberMe) {
-                localStorage.setItem('GCS_JOBP', JSON.stringify(_res));
-            }
+            // if (userData.rememberMe) {
+            //     localStorage.setItem('GCS_JOBP', JSON.stringify(_res));
+            // }
             dispatch(authSuccess(_res));
         } catch (err) {
             console.log(err);
@@ -108,10 +107,6 @@ const Login: React.FC<LoginProps> = ({}) => {
                                 type="password"
                                 autoComplete="current-password"
                             />
-                            <label>
-                                <Field type="checkbox" name="rememberMe" />
-                                Remember me
-                            </label>
                             <LoadingButton
                                 type="submit"
                                 fullWidth

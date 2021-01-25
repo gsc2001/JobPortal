@@ -52,7 +52,7 @@ router.get('/', auth, async (req, res) => {
             const _applications = await Application.find({
                 job: { $in: jobs.map(job => job._id) }
             })
-                .select('_id job applicant')
+                .select('_id job applicant status')
                 .lean();
             jobs.forEach((job, index) => {
                 const jobApplications = _applications.filter(
@@ -61,7 +61,6 @@ router.get('/', auth, async (req, res) => {
                 const filledPositions = jobApplications.filter(
                     _appl => _appl.status === applicationStatus.Accepted
                 );
-
                 if (
                     jobApplications.length >= job.maxApplications ||
                     filledPositions.length >= job.maxPositions

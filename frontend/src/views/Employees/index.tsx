@@ -163,7 +163,6 @@ const Employees: React.FC<EmployeesProps> = ({}) => {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h3"> My Employees </Typography>
-                {JSON.stringify(employees)}
             </Grid>
             <Grid item xs={9}>
                 <Grid container spacing={2}>

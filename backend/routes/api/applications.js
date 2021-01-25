@@ -3,7 +3,9 @@ const { check } = require('express-validator');
 
 const { auth, isRecruiter } = require('../../middleware/auth');
 const Application = require('../../models/Application');
+const { Applicant, Recruiter } = require('../../models/User');
 const { sendError, validate } = require('../../utils');
+const emailSend = require('../../utils/emailSend');
 const { roles, applicationStatus } = require('../../utils/enums');
 
 const router = express.Router();
@@ -77,18 +79,20 @@ router.put(
                 return sendError(res, 401, 'You are not the recruiter of this job');
             }
             let applicationPromises = [];
+            let applicantPromises = [];
+            let doEmail = false;
             if (req.body.status === applicationStatus.Accepted) {
-                // if update is to accept, check max positions check applicant acceptance, set doj
+                // if update is to accept, check max positions check applicant acceptance, set doj, email
                 // and also move all other applications for both job and user to rejected
 
-                console.log('hi');
                 const [jobApplications, _applications] = await Promise.all([
                     Application.find({
                         job: application.job.id,
                         applicant: { $ne: application.applicant }
                     }),
                     Application.find({
-                        applicant: application.applicant
+                        applicant: application.applicant,
+                        job: { $ne: application.job._id }
                     })
                 ]);
 
@@ -96,6 +100,7 @@ router.put(
                     appl => appl.status === applicationStatus.Accepted
                 );
 
+                console.log('JobID:', application.job._id);
                 console.log(filledPositions, _applications);
                 const isAlreadyAccepted =
                     _applications.filter(
@@ -130,14 +135,32 @@ router.put(
                         })
                     );
                 }
+                applicantPromises = [
+                    Applicant.findById(application.applicant).select('email').lean(),
+                    Recruiter.findById(req.user.id).select('name').lean()
+                ];
 
                 application.doj = new Date();
+                doEmail = true;
             }
 
             // update status now
             application.status = req.body.status;
-            await Promise.all([application.save(), ...applicationPromises]);
+            if (!doEmail) {
+                await Promise.all([application.save(), ...applicationPromises]);
+            } else {
+                const [applicant, recruiter] = await Promise.all([
+                    ...applicantPromises,
+                    application.save(),
+                    ...applicationPromises
+                ]);
 
+                emailSend(
+                    applicant.email,
+                    'Congratulations you are accepted!',
+                    `${recruiter.name} accepted your application!`
+                );
+            }
             return res.json({ application });
         } catch (err) {
             console.error(err.message);
