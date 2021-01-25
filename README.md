@@ -1,4 +1,4 @@
-# Mern Template
+# Job portal
 
 ## Install Dependencies
 
@@ -35,3 +35,17 @@ App will be at localhost:3000
 ```
 
 Server will be at localhost:5000
+
+## Development
+
+### Install deps
+
+```
+    npm install  # in root
+```
+
+### run
+
+```
+    npm run dev
+```
